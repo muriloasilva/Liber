@@ -1,0 +1,99 @@
+create database LiberT
+
+use LiberT
+
+create table gen(
+	nome varchar(50) not null unique,
+	statusGen int not null,
+	genID int identity(1,1) primary key
+
+)
+
+create table liv(
+	nome varchar(100) not null unique,
+	statusLiv int not null,
+	pathLiv varchar(255) not null,
+	insertDate varchar(20) not null,
+	modDate varchar(20),
+	fkGen int not null,
+	constraint FK foreign key (fkGen) references gen(genID),
+	livID int identity(1,1) primary key
+
+)
+
+create TABLE img(
+	pathImg varchar(255) not null,
+    statusImg int not null,
+    insertDate varchar(20) not null,
+    modDate varchar(20) ,
+    imgID int identity(1,1) primary key
+)
+
+create table usuar(
+	email varchar(255) not null unique,
+    senha varchar(25) not null,
+    nome varchar(50) not null unique,
+    nomePlum varchar(50),
+    statusUser int not null,
+    insertDate varchar(20) not null,
+    modDate varchar(20),
+    fkImg int not null,
+    constraint UserImg FOREIGN key (fkImg) REFERENCES img(imgID),
+    userID int identity(1,1) PRIMARY key
+)
+
+create table post(
+	titulo varchar(100) not null unique,
+    texto varchar(max) not null,
+    statusPost int not null,
+    insertDate varchar(20) not null,
+    modDate varchar(20),
+    fkUser int not null,
+    fkLiv int not null,
+    curtir int,
+    constraint postUser FOREIGN key (fkUser) REFERENCES usuar(userID),
+    constraint postLiv FOREIGN KEY (fkLiv) REFERENCES liv(livID),
+    postID int identity(1,1) PRIMARY key 
+)
+
+create table coment(
+    textCom varchar(5000) not null,
+    statusCom int not null,
+    insertDate varchar(20) not null,
+    modDate varchar(20),
+    fkUserCom int not null,
+    fkPostCom int not null,
+    constraint comUser FOREIGN key (fkUserCom) REFERENCES usuar(userID),
+    constraint comPost FOREIGN key (fkPostCom) REFERENCES post(postID),
+    comID int identity(1,1) PRIMARY KEY
+)
+
+create table fav(
+	fkFavPos int not null,
+    fkFavUse int not null,
+    constraint favUser FOREIGN key (fkFavUse) REFERENCES usuar(userID),
+    constraint favPos FOREIGN KEY (fkFavPos) REFERENCES post(postid),
+    statusFav int not null,
+    favID int identity(1,1) PRIMARY key 
+)
+
+create table genPos (
+	fkPos int not null,
+    fkGen int not null,
+    status int not null,
+	constraint genPost foreign key (fkPos) references post(postID),
+	constraint genGen foreign key (fkGen) references gen(genID),
+    genPos int identity(1,1) PRIMARY key 
+
+)
+
+create table posImg (
+	fkPost int not null,
+    fkImg int not null,
+    statusPosImg int not null,
+    constraint posImPos FOREIGN key (fkPost) REFERENCES post(postID),
+    constraint posIm FOREIGN KEY (fkImg) REFERENCES img(imgID),
+    posImgID int identity(1,1) PRIMARY key 
+
+)
+
